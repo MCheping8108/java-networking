@@ -12,7 +12,8 @@ public class GreetingServer extends Thread {
 
     public GreetingServer(int port) throws IOException{
         serverSocket = new ServerSocket(port);
-        serverSocket.setSoTimeout(10000);
+        // 空闲时间限制，时间到了会自动断开（写不写都行）
+//        serverSocket.setSoTimeout(1000);
     }
 
     public void run(){
@@ -26,10 +27,13 @@ public class GreetingServer extends Thread {
                 DataOutputStream out = new DataOutputStream(server.getOutputStream());
                 out.writeUTF("听我说谢谢你：" + server.getLocalSocketAddress() + "\n GoodBye!");
                 server.close();
-            }catch (SocketTimeoutException s){
-                System.out.println("Socket timed out!");
-                break;
-            }catch (IOException e){
+            }
+            // 倒计时结束时，会调用这个
+//            catch (SocketTimeoutException s){
+//                System.out.println("Socket timed out!");
+//                break;
+//            }
+            catch (IOException e){
                 e.printStackTrace();
                 break;
             }
